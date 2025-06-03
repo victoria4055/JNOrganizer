@@ -1,0 +1,194 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: row;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-right: 1px solid #ccc;
+}
+
+.sidebar h1 {
+    font-size: 20px;
+    margin-top: 0;
+}
+
+.sidebar nav a {
+    display: block;
+    margin: 10px 0;
+    color: black;
+    text-decoration: none;
+}
+
+.main-content {
+    flex: 1;
+    padding: 30px;
+}
+
+.main-content h2 {
+    font-size: 28px;
+}
+
+.search-bar {
+    margin-top: 20px;
+}
+
+input[type="text"] {
+    width: 60%;
+    padding: 10px;
+    font-size: 16px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin-left: 10px;
+}
+
+footer {
+    border-top: 1px solid #ccc;
+    padding: 20px;
+    font-size: 14px;
+    background-color: #fafafa;
+    text-align: center;
+}
+
+.home-banner {
+    width: 100%;
+    height: 250px;
+    background-image: url("/static/images/JN-Logo-Crop.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.action-boxes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    margin: 40px auto;
+    width: 100%;
+    text-align: center;
+}
+
+.action-box {
+    width: 350px;
+    padding: 30px 0;
+    font-size: 18px;
+    background-color: #111;
+    color: #fff;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 8px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.action-box:hover {
+    background-color: #333;
+}
+
+
+/* dashboard layout */
+
+.dashboard-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 220px;
+    background-color: #111;
+    color: white;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.sidebar h1 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.sidebar nav a {
+    color: #ccc;
+    text-decoration: none;
+    margin: 10px 0;
+    font-size: 15px;
+}
+
+.sidebar nav a:hover {
+    color: white;
+}
+
+.main-content {
+    flex: 1;
+    padding: 40px 60px;
+    background-color: #f9f9f9;
+}
+
+.main-content h2 {
+    font-size: 32px;
+    margin-bottom: 30px;
+}
+
+/* searchbar section */
+
+.search-bar form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-bar input[type="text"] {
+    flex: 1;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.search-bar button {
+    padding: 12px 20px;
+    font-size: 16px;
+    border: none;
+    background-color: #111;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.search-bar button:hover {
+    background-color: #333;
+}
+
+.upload-btn {
+    margin-top:30px;
+    padding: 12px 24px;
+    font-size: 16px;
+    background-color: #111;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3 ease;
+}
+
+.upload-btn:hover {
+    background-color: #333;
+}

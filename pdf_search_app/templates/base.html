@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}JN Records{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+        {% block content %}{% endblock %}
+
+    <footer>
+        <p>Contact: 305-629-8880 * JN@music.com * 5361 Nw 110th Ave, Doral, FL</p>
+        <p>&copy; 2025 JN Records</p>
+    </footer>
+</body>
+</html>

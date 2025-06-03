@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - JN Records{% endblock %}
+{% block content %}
+<div class="dashboard-wrapper">
+    <div class="sidebar">
+        <h1>JN Music Group</h1>
+        <hr>
+        <nav>
+        <a href="#">User Home</a>
+        <a href="#">Database</a>
+        <a href="#">Archives</a>
+        <a href="#">Help</a>
+        </nav>
+    </div>
+
+  
+  <div class="main-content">
+    <h2>Dashboard</h2>
+
+    <div class="search-bar">
+      <form method="GET" action="{{ url_for('search') }}">
+        <input type="text" name="query" placeholder="Search for files, artists, tags...">
+        <button type="submit">Search</button>
+      </form>
+    </div>
+
+    <button class="upload-btn" onclick='location.href="{{ url_for("upload") }}"'>Upload a PDF</button>
+</div>
+</div>
+  {% endblock %}
