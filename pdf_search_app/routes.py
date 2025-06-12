@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
+from .models import db, Contract
 
 
 routes_blueprint = Blueprint('routes', __name__)
@@ -22,10 +23,17 @@ def login():
 def dashboard():
     return render_template('dashboard.html')
 
-@routes_blueprint.route('/search', methods=['GET'])
+@routes_blueprint.route('/search', methods=['GET', 'POST'])
 def search():
-    query = request.args.get('query', '')
-    return f"You searched for: {query}"
+    if request.method == 'POST':
+        query = request.form.get('search_query', '').strip()
+        if not query:
+            return render_template('search_results.html', contracts=[], query=query, count=0)
+
+        results = Contract.query.filter(Contract.artist_name.ilike(f'%{query}%')).all()
+        return render_template('search_results.html', contracts=results, query=query, count=len(results))
+
+    return redirect(url_for('dashboard'))
 
 @routes_blueprint.route('/upload')
 def upload():
