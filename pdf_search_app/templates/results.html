@@ -5,7 +5,7 @@
 {% if results %}
     <ul>
         {% for result in results %}
-            <li>{{ result }}</li>
+            <li>{{ result.display_name }}</li>
         {% endfor %}
     </ul>
 {% else %}

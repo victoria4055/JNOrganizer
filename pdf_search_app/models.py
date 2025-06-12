@@ -11,5 +11,7 @@ class Contract(db.Model):
     artist_name = db.Column(db.String, nullable=False)
     date = db.Column(db.String, nullable=False)
     keywords = db.Column(db.String, nullable=True)
+    status = db.Column(db.String(120))  # Add this line
+    affiliation = db.Column(db.String(200), nullable=True) 
     preview = db.Column(db.Text, nullable=True)
 

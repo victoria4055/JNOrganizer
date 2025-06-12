@@ -1,9 +1,13 @@
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
 
 # Initialize SQLAlchemy
 from .models import db
+
+migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
@@ -19,6 +23,8 @@ def create_app():
 
     # Initialize db with app
     db.init_app(app)
+    migrate.init_app(app, db)  # ✅ Enables Flask-Migrate
+
 
     # Import and register routes
     from .routes import routes_blueprint

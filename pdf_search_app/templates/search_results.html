@@ -19,7 +19,7 @@
         <tbody>
             {% for contract in contracts %}
             <tr>
-                <td>{{ contract.filename }}</td>
+                <td>{{ contract.display_name }}</td>
                 <td>{{ contract.artist_name }}</td>
                 <td>{{ contract.date }}</td>
                 <td>{{ contract.keywords or '—' }}</td>

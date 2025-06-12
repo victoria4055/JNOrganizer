@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from .models import db, Contract
+from sqlalchemy import or_
+import os
 
 
 routes_blueprint = Blueprint('routes', __name__)
@@ -30,10 +32,29 @@ def search():
         if not query:
             return render_template('search_results.html', contracts=[], query=query, count=0)
 
-        results = Contract.query.filter(Contract.artist_name.ilike(f'%{query}%')).all()
+        results = Contract.query.filter(
+            or_(
+                Contract.artist_name.ilike(f'%{query}%'),
+                Contract.date.ilike(f'%{query}%'),
+                Contract.keywords.ilike(f'%{query}%'),
+                Contract.affiliation.ilike(f'%{query}%')
+            )
+        ).all()
+
+        for c in results:
+            c.display_name = os.path.basename(c.filename)
+
         return render_template('search_results.html', contracts=results, query=query, count=len(results))
 
     return redirect(url_for('routes.dashboard'))
+
+@routes_blueprint.route("/results")
+def results():
+    results = Contract.query.all()
+    for c in results:
+        c.display_name = os.path.basename(c.filename)
+    return render_template("results.html", results=results)
+
 
 @routes_blueprint.route('/upload')
 def upload():

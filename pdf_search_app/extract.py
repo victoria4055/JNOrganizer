@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import Contract, Base
+from pdf_search_app.models import Contract
 from pdf2image import convert_from_path
 from pytesseract import image_to_string
 import pytesseract
@@ -54,6 +54,25 @@ def extract_keywords(text):
 
 def normalize_whitespace(text):
     return ' '.join(text.split())
+
+def extract_metadata(filepath):
+    if filepath.lower().endswith(".pdf"):
+        text = extract_text_from_pdf(filepath)
+        text = normalize_whitespace(text)
+    elif filepath.lower().endswith(".docx"):
+        text = extract_text_from_docx(filepath)
+    else:
+        print(f"Unsupported file type: {filepath}")
+        return {}
+
+    return {
+        "artist_name": extract_artist_name(text),
+        "date": extract_date(text),
+        "keywords": extract_keywords(text),
+        "affiliation": "",  # If you plan to extract this, add logic later
+        "content": text
+    }
+
 
 CONTRACT_DIR = "/Users/victoriav/Documents/JNOrganizer/MockContracts"
 
@@ -115,3 +134,38 @@ for contract in contracts:
 
 session.commit()
 print("Contracts successfully added to the database!")
+
+def process_folder(folder_path):
+    import os
+    from pdf_search_app.models import Contract
+    from pdf_search_app import db
+    from pdf_search_app.extract import extract_metadata
+
+    for root, dirs, files in os.walk(folder_path):
+        for filename in files:
+            if filename.lower().endswith((".pdf", ".docx")):
+                file_path = os.path.join(root, filename)
+
+                # NEW: use relative path as the unique filename
+                relative_path = os.path.relpath(file_path, start=folder_path)
+
+                print(f"📄 Processing: {file_path}")
+                data = extract_metadata(file_path)
+
+                # Prevent duplicates by checking full relative path
+                existing = Contract.query.filter_by(filename=relative_path).first()
+                if existing:
+                    continue
+
+                contract = Contract(
+                    filename=relative_path,  # now includes folder if any
+                    artist_name=data.get("artist_name", ""),
+                    date=data.get("date", ""),
+                    keywords=data.get("keywords", ""),
+                    affiliation=data.get("affiliation", ""),
+                    preview=data.get("content", "")[:300]
+                )
+                db.session.add(contract)
+
+    db.session.commit()
+    print("All mock contracts processed and added.")
