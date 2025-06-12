@@ -2,6 +2,7 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_login import LoginManager
 
 
 # Initialize SQLAlchemy
@@ -29,6 +30,16 @@ def create_app():
     # Import and register routes
     from .routes import routes_blueprint
     app.register_blueprint(routes_blueprint)
+
+    login_manager = LoginManager()
+    login_manager.login_view = 'routes.login'  # route name
+    login_manager.init_app(app)
+
+    from .models import User
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
 
     return app
 

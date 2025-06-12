@@ -2,6 +2,10 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from .models import db, Contract
 from sqlalchemy import or_
 import os
+from flask_login import login_user, logout_user, login_required, current_user
+from .models import User
+from .forms import LoginForm, RegisterForm
+
 
 
 routes_blueprint = Blueprint('routes', __name__)
@@ -10,18 +14,8 @@ routes_blueprint = Blueprint('routes', __name__)
 def home():
     return render_template('home.html')
 
-@routes_blueprint.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        # Dummy login logic — replace later with real validation
-        username = request.form.get('username')
-        password = request.form.get('password')
-        print(f"Login attempt: {username} / {password}")  # for testing
-        return redirect(url_for('routes.dashboard'))
-    
-    return render_template('login.html')
-
 @routes_blueprint.route('/dashboard')
+@login_required
 def dashboard():
     return render_template('dashboard.html')
 
@@ -76,4 +70,39 @@ def edit_contract(id):
         return redirect(url_for('routes.search'))  # Or redirect to dashboard
 
     return render_template('edit_contracts.html', contract=contract)
+
+
+@routes_blueprint.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        if User.query.filter_by(username=form.username.data).first():
+            flash('Username already exists')
+            return redirect(url_for('routes.register'))
+
+        user = User(username=form.username.data, email=form.email.data)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Registration successful! Please log in.')
+        return redirect(url_for('routes.login'))
+
+    return render_template('register.html', form=form)
+
+@routes_blueprint.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user and user.check_password(form.password.data):
+            login_user(user)
+            return redirect(url_for('routes.dashboard'))
+        flash('Invalid username or password.')
+    return render_template('login.html', form=form)
+
+@routes_blueprint.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('routes.login'))
 
