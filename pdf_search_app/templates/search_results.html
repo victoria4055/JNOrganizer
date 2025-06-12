@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Search Results for "{{ query }}"</h2>
+    <p>{{ count }} result{{ '' if count == 1 else 's' }} found</p>
+
+    {% if contracts %}
+    <table border="1" cellpadding="10" cellspacing="0">
+        <thead>
+            <tr>
+                <th>File Name</th>
+                <th>Artist</th>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contract in contracts %}
+            <tr>
+                <td>{{ contract.filename }}</td>
+                <td>{{ contract.artist_name }}</td>
+                <td>{{ contract.date }}</td>
+                <td>{{ contract.keywords or '—' }}</td>
+                <td>{{ contract.status or '—' }}</td>
+                <td>{{ contract.affiliation or '—' }}</td>
+                <td>
+                  <a href="{{ url_for('static', filename='MockContracts/' + contract.filename) }}" target="_blank">Open</a>
+                </td>
+                <td>
+                  <a href="{{ url_for('routes.edit_contract', id=contract.id) }}">Edit</a>
+                </td>
+              </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No contracts matched your search.</p>
+    {% endif %}
+</div>
+{% endblock %}

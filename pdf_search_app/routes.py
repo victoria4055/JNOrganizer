@@ -33,8 +33,13 @@ def search():
         results = Contract.query.filter(Contract.artist_name.ilike(f'%{query}%')).all()
         return render_template('search_results.html', contracts=results, query=query, count=len(results))
 
-    return redirect(url_for('dashboard'))
+    return redirect(url_for('routes.dashboard'))
 
 @routes_blueprint.route('/upload')
 def upload():
     return render_template('upload.html')
+
+@routes_blueprint.route('/edit/<int:id>', methods=['GET', 'POST'])
+def edit_contract(id):
+    # Placeholder — later we'll render a real form
+    return f"Edit form coming soon for contract ID {id}"
