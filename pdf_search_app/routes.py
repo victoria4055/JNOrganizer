@@ -41,5 +41,18 @@ def upload():
 
 @routes_blueprint.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit_contract(id):
-    # Placeholder — later we'll render a real form
-    return f"Edit form coming soon for contract ID {id}"
+    contract = Contract.query.get_or_404(id)
+
+    if request.method == 'POST':
+        # Update only the editable fields
+        contract.artist_name = request.form.get('artist_name')
+        contract.date = request.form.get('date')
+        contract.keywords = request.form.get('keywords')
+        contract.affiliation = request.form.get('affiliation')
+
+        db.session.commit()
+        flash('Contract updated successfully.', 'success')
+        return redirect(url_for('routes.search'))  # Or redirect to dashboard
+
+    return render_template('edit_contracts.html', contract=contract)
+

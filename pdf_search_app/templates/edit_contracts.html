@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Edit Contract Metadata</h2>
+
+    <form method="POST">
+        <p><strong>File Name:</strong> {{ contract.filename }}</p>
+
+        <label>Artist Name:</label><br>
+        <input type="text" name="artist_name" value="{{ contract.artist_name }}"><br><br>
+
+        <label>Date:</label><br>
+        <input type="text" name="date" value="{{ contract.date }}"><br><br>
+
+        <label>Keywords:</label><br>
+        <input type="text" name="keywords" value="{{ contract.keywords }}"><br><br>
+
+        <label>Affiliation:</label><br>
+        <input type="text" name="affiliation" value="{{ contract.affiliation }}"><br><br>
+
+        <button type="submit">Save Changes</button>
+    </form>
+</div>
+{% endblock %}
