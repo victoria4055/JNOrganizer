@@ -18,13 +18,13 @@
     <h2>Dashboard</h2>
 
     <div class="search-bar">
-      <form method="GET" action="{{ url_for('search') }}">
-        <input type="text" name="query" placeholder="Search for files, artists, tags...">
+        <form method="GET" action="{{ url_for('routes.search') }}">
+            <input type="text" name="query" placeholder="Search for files, artists, tags...">
         <button type="submit">Search</button>
       </form>
     </div>
 
-    <button class="upload-btn" onclick='location.href="{{ url_for("upload") }}"'>Upload a PDF</button>
+    <button class="upload-btn" onclick='location.href="{{ url_for("routes.upload") }}"'>Upload a PDF</button>
 </div>
 </div>
   {% endblock %}
