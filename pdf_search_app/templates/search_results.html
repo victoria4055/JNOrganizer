@@ -6,6 +6,22 @@
     <p>{{ count }} result{{ '' if count == 1 else 's' }} found</p>
 
     {% if contracts %}
+
+    <form method="get" action="{{ url_for('routes.search') }}" style="margin-bottom: 15px;">
+        <input type="hidden" name="q" value="{{ query }}">
+        <label for="sort">Sort by:</label>
+        <select name="sort" id="sort">
+          <option value="relevance" {% if request.args.get('sort') == 'relevance' %}selected{% endif %}>Relevance</option>
+          <option value="date_desc" {% if request.args.get('sort') == 'date_desc' %}selected{% endif %}>Date (Newest → Oldest)</option>
+          <option value="date_asc" {% if request.args.get('sort') == 'date_asc' %}selected{% endif %}>Date (Oldest → Newest)</option>
+          <option value="artist_asc" {% if request.args.get('sort') == 'artist_asc' %}selected{% endif %}>Artist (A–Z)</option>
+          <option value="artist_desc" {% if request.args.get('sort') == 'artist_desc' %}selected{% endif %}>Artist (Z–A)</option>
+        </select>
+        <button type="submit">Apply</button>
+      </form>
+
+      <input type="text" id="filterInput" placeholder="Filter results..." style="margin-bottom: 10px; width: 300px;">
+      
     <table border="1" cellpadding="10" cellspacing="0">
         <thead>
             <tr>
@@ -34,6 +50,17 @@
               </tr>
             {% endfor %}
         </tbody>
+
+        <script>
+            document.getElementById("filterInput").addEventListener("keyup", function () {
+              let input = this.value.toLowerCase();
+              let rows = document.querySelectorAll("table tbody tr");
+              rows.forEach(row => {
+                row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
+              });
+            });
+          </script>          
+
     </table>
     {% else %}
     <p>No contracts matched your search.</p>

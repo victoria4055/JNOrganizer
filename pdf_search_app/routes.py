@@ -26,24 +26,38 @@ def dashboard():
 def search():
     if request.method == 'POST':
         query = request.form.get('search_query', '').strip()
-        if not query:
-            return render_template('search_results.html', contracts=[], query=query, count=0)
+        return redirect(url_for('routes.search', q=query))
 
-        results = Contract.query.filter(
-            or_(
-                Contract.artist_name.ilike(f'%{query}%'),
-                Contract.date.ilike(f'%{query}%'),
-                Contract.keywords.ilike(f'%{query}%'),
-                Contract.affiliation.ilike(f'%{query}%')
-            )
-        ).all()
+    query = request.args.get('q', '').strip()
+    sort_option = request.args.get('sort', 'relevance')  # default sort
 
-        for c in results:
-            c.display_name = os.path.basename(c.filename)
+    if not query:
+        return render_template('search_results.html', contracts=[], query=query, count=0)
 
-        return render_template('search_results.html', contracts=results, query=query, count=len(results))
+    filters = or_(
+        Contract.artist_name.ilike(f'%{query}%'),
+        Contract.date.ilike(f'%{query}%'),
+        Contract.keywords.ilike(f'%{query}%'),
+        Contract.affiliation.ilike(f'%{query}%')
+    )
 
-    return redirect(url_for('routes.dashboard'))
+    # Sorting logic
+    if sort_option == 'artist_asc':
+        contracts = Contract.query.filter(filters).order_by(Contract.artist_name.asc()).all()
+    elif sort_option == 'artist_desc':
+        contracts = Contract.query.filter(filters).order_by(Contract.artist_name.desc()).all()
+    elif sort_option == 'date_asc':
+        contracts = Contract.query.filter(filters).order_by(Contract.date.asc()).all()
+    elif sort_option == 'date_desc':
+        contracts = Contract.query.filter(filters).order_by(Contract.date.desc()).all()
+    else:  # default relevance fallback
+        contracts = Contract.query.filter(filters).all()
+
+    for c in contracts:
+        c.display_name = os.path.basename(c.filename)
+
+    return render_template('search_results.html', contracts=contracts, query=query, count=len(contracts))
+
 
 @routes_blueprint.route("/results")
 def results():
@@ -104,7 +118,9 @@ def upload():
             keywords=metadata.get('keywords', ''),
             affiliation=metadata.get('affiliation', ''),
             status=metadata.get('status', ''),
-            preview=metadata.get('preview', '')
+            preview=metadata.get('preview', ''),
+            category=metadata.get('category', 'Uncategorized') 
+
         )
         db.session.add(new_contract)
         db.session.commit()
@@ -139,6 +155,10 @@ def register():
             flash('Username already exists')
             return redirect(url_for('routes.register'))
 
+        if not form.email.data.endswith('@jnrecords.com') and form.email.data != "victoria.v1@icloud.com":
+            flash('Only JNRecords employees can register.')
+            return redirect(url_for('routes.register'))
+
         user = User(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
         db.session.add(user)
@@ -148,16 +168,26 @@ def register():
 
     return render_template('register.html', form=form)
 
+
 @routes_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
-        if user and user.check_password(form.password.data):
-            login_user(user)
-            return redirect(url_for('routes.dashboard'))
-        flash('Invalid username or password.')
+        if user:
+            # Allow if email ends in @jnrecords.com or it's your specific email
+            if user.email.endswith('@jnrecords.com') or user.email == "victoria.v1@icloud.com":
+                if user.check_password(form.password.data):
+                    login_user(user)
+                    return redirect(url_for('routes.dashboard'))
+                else:
+                    flash('Invalid password.')
+            else:
+                flash('Access denied. Only JNRecords employees may log in.')
+        else:
+            flash('User not found.')
     return render_template('login.html', form=form)
+
 
 @routes_blueprint.route('/logout')
 @login_required
@@ -169,18 +199,40 @@ def logout():
 @routes_blueprint.route('/database')
 @login_required
 def database():
-    sort_option = request.args.get('sort', 'date_desc')  # default
+    sort_option = request.args.get('sort', 'date_desc')
+    category_filter = request.args.get('category', None)
 
+    query = Contract.query
+
+    if category_filter:
+        query = query.filter(Contract.category.ilike(f'%{category_filter}%'))
+
+    # Sorting logic
     if sort_option == 'artist_asc':
-        contracts = Contract.query.order_by(Contract.artist_name.asc()).all()
+        query = query.order_by(Contract.artist_name.asc())
     elif sort_option == 'artist_desc':
-        contracts = Contract.query.order_by(Contract.artist_name.desc()).all()
+        query = query.order_by(Contract.artist_name.desc())
     elif sort_option == 'date_asc':
-        contracts = Contract.query.order_by(Contract.date.asc()).all()
-    else:  # 'date_desc' or fallback
-        contracts = Contract.query.order_by(Contract.date.desc()).all()
+        query = query.order_by(Contract.date.asc())
+    elif sort_option == 'category_asc':
+        query = query.order_by(Contract.category.asc())
+    elif sort_option == 'category_desc':
+        query = query.order_by(Contract.category.desc())
+    else:
+        query = query.order_by(Contract.date.desc())
 
+    contracts = query.all()
     for c in contracts:
         c.display_name = os.path.basename(c.filename)
 
     return render_template('general_db.html', contracts=contracts)
+
+@routes_blueprint.route('/archives')
+@login_required
+def archives():
+    return render_template('archives.html')
+
+@routes_blueprint.route('/help')
+@login_required
+def help():
+    return render_template('help.html')
