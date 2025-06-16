@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="success-message">
+    <h2>Upload successful!</h2>
+    <p>Your file <strong>{{ filename }}</strong> was uploaded.</p>
+    <a href="{{ url_for('routes.dashboard') }}" class="btn btn-primary">Return to Dashboard</a>
+  </div>
+{% endblock %}

@@ -2,8 +2,12 @@
 {% block title %}Upload - JN Records{% endblock %}
 {% block content %}
 <h2>Upload PDF</h2>
-<form method="post" action="/upload" enctype="multipart/form-data">
-    <input type="file" name="pdf_file" accept=".pdf">
-    <button type="submit">Upload</button>
-</form>
+<div class="container">
+    <h2>Upload a Contract</h2>
+    <form method="POST" action="{{ url_for('routes.upload') }}" enctype="multipart/form-data">
+        <input type="file" name="contract_file" accept=".pdf,.docx" required>
+        <br><br>
+        <button type="submit">Upload</button>
+    </form>
+</div>
 {% endblock %}

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Database - JN Records{% endblock %}
+
+{% block content %}
+<h2>All Contracts</h2>
+
+<form method="get" action="{{ url_for('routes.database') }}" style="margin-bottom: 15px;">
+    <label for="sort">Sort by:</label>
+    <select name="sort" id="sort">
+      <option value="date_desc" {% if request.args.get('sort') == 'date_desc' %}selected{% endif %}>Date (Newest → Oldest)</option>
+      <option value="date_asc" {% if request.args.get('sort') == 'date_asc' %}selected{% endif %}>Date (Oldest → Newest)</option>
+      <option value="artist_asc" {% if request.args.get('sort') == 'artist_asc' %}selected{% endif %}>Artist (A-Z)</option>
+      <option value="artist_desc" {% if request.args.get('sort') == 'artist_desc' %}selected{% endif %}>Artist (Z-A)</option>
+    </select>
+    <button type="submit">Apply</button>
+  </form>  
+
+
+<input type="text" id="filterInput" placeholder="Filter by artist, keyword, affiliation..." style="margin-bottom: 10px; width: 300px;">
+
+<table border="1" cellpadding="10" cellspacing="0" id="contractsTable">
+    <thead>
+        <tr>
+            <th onclick="sortTable(0)">File Name ⬍</th>
+            <th onclick="sortTable(1)">Artist ⬍</th>
+            <th onclick="sortTable(2)">Date ⬍</th>
+            <th onclick="sortTable(3)">Category ⬍</th>
+            <th>Affiliation</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for contract in contracts %}
+        <tr>
+            <td>{{ contract.display_name }}</td>
+            <td>{{ contract.artist_name }}</td>
+            <td>{{ contract.date }}</td>
+            <td>{{ contract.keywords or '—' }}</td>
+            <td>{{ contract.affiliation or '—' }}</td>
+            <td>
+                <a href="{{ url_for('static', filename='MockContracts/' + contract.filename) }}" target="_blank">Open</a> |
+                <a href="{{ url_for('routes.edit_contract', id=contract.id) }}">Edit</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+  // Filter
+  document.getElementById("filterInput").addEventListener("keyup", function() {
+    let input = this.value.toLowerCase();
+    let rows = document.querySelectorAll("#contractsTable tbody tr");
+    rows.forEach(row => {
+      row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
+    });
+  });
+
+  // Sort
+  function sortTable(colIndex) {
+    const table = document.getElementById("contractsTable");
+    let switching = true, dir = "asc", switchcount = 0;
+    while (switching) {
+      switching = false;
+      let rows = table.rows;
+      for (let i = 1; i < rows.length - 1; i++) {
+        let x = rows[i].getElementsByTagName("TD")[colIndex];
+        let y = rows[i + 1].getElementsByTagName("TD")[colIndex];
+        let shouldSwitch = dir == "asc" 
+            ? x.innerText.toLowerCase() > y.innerText.toLowerCase()
+            : x.innerText.toLowerCase() < y.innerText.toLowerCase();
+        if (shouldSwitch) {
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+          switchcount++;
+          break;
+        }
+      }
+      if (!switching && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+</script>
+{% endblock %}
