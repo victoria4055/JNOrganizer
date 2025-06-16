@@ -1,7 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
+<div style="position: fixed; top: 10px; left: 10px; z-index: 999;">
+    <a href="{{ url_for('routes.dashboard') }}" style="text-decoration: none; background-color: #007BFF; color: white; padding: 8px 12px; border-radius: 5px;">
+      ← Return to Dashboard
+    </a>
+  </div>
+
+
+  <div class="container" style="margin-top: 60px;">
     <h2>Search Results for "{{ query }}"</h2>
     <p>{{ count }} result{{ '' if count == 1 else 's' }} found</p>
 
@@ -28,7 +35,11 @@
                 <th>File Name</th>
                 <th>Artist</th>
                 <th>Date</th>
+                <th>Keywords</th>
+                <th>Affiliation</th>
+                <th>Completion</th>
                 <th>Category</th>
+                <th>Summary</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -39,10 +50,12 @@
                 <td>{{ contract.artist_name }}</td>
                 <td>{{ contract.date }}</td>
                 <td>{{ contract.keywords or '—' }}</td>
-                <td>{{ contract.status or '—' }}</td>
                 <td>{{ contract.affiliation or '—' }}</td>
+                <td>{{ contract.status or '—' }}</td>
+                <td>{{ contract.category or '—' }}</td>
+                <td>{{ contract.summary or '—' }}</td>
                 <td>
-                  <a href="{{ url_for('static', filename='MockContracts/' + contract.filename) }}" target="_blank">Open</a>
+                    <a href="{{ url_for('routes.open_contract', filename=contract.filename) }}" target="_blank">Open</a> |
                 </td>
                 <td>
                   <a href="{{ url_for('routes.edit_contract', id=contract.id) }}">Edit</a>

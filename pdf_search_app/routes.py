@@ -7,11 +7,20 @@ from .models import User
 from .forms import LoginForm, RegisterForm
 from werkzeug.utils import secure_filename
 from .extract import extract_metadata 
+from flask_login import login_required, current_user
+from pdf_search_app.models import ActivityLog
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'static', 'MockContracts')
 
 
 routes_blueprint = Blueprint('routes', __name__)
+
+
+def generate_summary(text):
+    # Placeholder until OpenAI API integration is approved
+    if not text:
+        return ""
+    return text[:300] + "..." if len(text) > 300 else text
 
 @routes_blueprint.route('/')
 def home():
@@ -20,6 +29,9 @@ def home():
 @routes_blueprint.route('/dashboard')
 @login_required
 def dashboard():
+    log = ActivityLog(user_id=current_user.id, action="Viewed Dashboard")
+    db.session.add(log)
+    db.session.commit()
     return render_template('dashboard.html')
 
 @routes_blueprint.route('/search', methods=['GET', 'POST'])
@@ -55,6 +67,11 @@ def search():
 
     for c in contracts:
         c.display_name = os.path.basename(c.filename)
+
+    if current_user.is_authenticated:
+        log = ActivityLog(user_id=current_user.id, action=f"Performed search: '{query}'")
+        db.session.add(log)
+        db.session.commit()   
 
     return render_template('search_results.html', contracts=contracts, query=query, count=len(contracts))
 
@@ -110,6 +127,7 @@ def upload():
 
         from .extract import extract_metadata
         metadata = extract_metadata(save_path)
+        summary = generate_summary(metadata.get('content', ''))
 
         new_contract = Contract(
             filename=filename,
@@ -118,11 +136,15 @@ def upload():
             keywords=metadata.get('keywords', ''),
             affiliation=metadata.get('affiliation', ''),
             status=metadata.get('status', ''),
-            preview=metadata.get('preview', ''),
+            summary=metadata.get('summary', ''),
             category=metadata.get('category', 'Uncategorized') 
 
         )
         db.session.add(new_contract)
+        db.session.commit()
+
+        log = ActivityLog(user_id=current_user.id, action=f"Uploaded contract: {filename}")
+        db.session.add(log)
         db.session.commit()
 
         return render_template('upload_success.html', filename=filename)
@@ -139,10 +161,18 @@ def edit_contract(id):
         contract.date = request.form.get('date')
         contract.keywords = request.form.get('keywords')
         contract.affiliation = request.form.get('affiliation')
+        contract.status = request.form.get('completion')
+        contract.category = request.form.get('category') 
+
 
         db.session.commit()
+
+        log = ActivityLog(user_id=current_user.id, action=f"Edited contract: {contract.filename}")
+        db.session.add(log)
+        db.session.commit()
+
         flash('Contract updated successfully.', 'success')
-        return redirect(url_for('routes.search'))  # Or redirect to dashboard
+        return redirect(url_for('routes.database')) 
 
     return render_template('edit_contracts.html', contract=contract)
 
@@ -225,12 +255,41 @@ def database():
     for c in contracts:
         c.display_name = os.path.basename(c.filename)
 
+    if current_user.is_authenticated:
+        log = ActivityLog(user_id=current_user.id, action="Viewed Database")
+        db.session.add(log)
+        db.session.commit()
+
     return render_template('general_db.html', contracts=contracts)
 
-@routes_blueprint.route('/archives')
+@routes_blueprint.route('/user_home')
 @login_required
-def archives():
-    return render_template('archives.html')
+def user_home():
+    viewed = ActivityLog.query.filter(
+        ActivityLog.user_id == current_user.id,
+        ActivityLog.action.like("Viewed contract:%")
+    ).order_by(ActivityLog.timestamp.desc()).limit(10).all()
+
+    uploads_edits = ActivityLog.query.filter(
+        ActivityLog.user_id == current_user.id,
+        ActivityLog.action.like("Uploaded contract:%") | ActivityLog.action.like("Edited contract:%")
+    ).order_by(ActivityLog.timestamp.desc()).limit(10).all()
+
+    return render_template(
+        'user_home.html',
+        user=current_user,
+        viewed=viewed,
+        uploads_edits=uploads_edits
+    )
+
+
+@routes_blueprint.route('/open/<filename>')
+@login_required
+def open_contract(filename):
+    log = ActivityLog(user_id=current_user.id, action=f"Viewed contract: {filename}")
+    db.session.add(log)
+    db.session.commit()
+    return redirect(url_for('static', filename='MockContracts/' + filename))
 
 @routes_blueprint.route('/help')
 @login_required

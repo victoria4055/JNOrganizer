@@ -2,6 +2,14 @@
 {% block title %}Database - JN Records{% endblock %}
 
 {% block content %}
+
+<div style="position: fixed; top: 15px; left: 15px; z-index: 1000;">
+    <a href="{{ url_for('routes.dashboard') }}" style="text-decoration: none; background-color: #007BFF; color: white; padding: 8px 12px; border-radius: 5px; font-weight: bold;">
+      ← Return to Dashboard
+    </a>
+  </div>
+
+<div style="padding-top: 60px;">
 <h2>All Contracts</h2>
 
 <form method="get" action="{{ url_for('routes.database') }}" style="margin-bottom: 15px;">
@@ -31,7 +39,7 @@
             <th onclick="sortTable(4)">Affiliation ⬍</th>
             <th onclick="sortTable(5)">Completion ⬍</th>
             <th onclick="sortTable(6)">Category ⬍</th>
-            <th>Preview</th>
+            <th>Summary</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -45,9 +53,9 @@
             <td>{{ contract.affiliation or '—' }}</td>
             <td>{{ contract.status or '—' }}</td>
             <td>{{ contract.category or '—' }}</td>
-            <td>{{ contract.preview[:100] ~ '...' if contract.preview else '—' }}</td>
+            <td>{{ contract.summary or '—' }}</td>
             <td>
-                <a href="{{ url_for('static', filename='MockContracts/' + contract.filename) }}" target="_blank">Open</a> |
+                <a href="{{ url_for('routes.open_contract', filename=contract.filename) }}" target="_blank">Open</a> |
                 <a href="{{ url_for('routes.edit_contract', id=contract.id) }}">Edit</a>
             </td>
         </tr>
@@ -92,4 +100,5 @@
     }
   }
 </script>
+</div>
 {% endblock %}

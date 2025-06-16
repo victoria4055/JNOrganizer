@@ -1,9 +1,10 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
 
-# This db object is what your app and routes will share
+
 db = SQLAlchemy()
 
 class Contract(db.Model):
@@ -17,7 +18,7 @@ class Contract(db.Model):
     status = db.Column(db.String(120))  # Add this line
     affiliation = db.Column(db.String(200), nullable=True) 
     category = db.Column(db.String, default='Uncategorized')
-    preview = db.Column(db.Text, nullable=True)
+    summary = db.Column(db.Text, nullable=True)
 
 
 class User(UserMixin, db.Model):
@@ -34,3 +35,15 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+
+class ActivityLog(db.Model):
+    __tablename__ = 'activity_log'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))  # assuming you have a User model
+    action = db.Column(db.String(255), nullable=False)         # e.g. 'Uploaded PDF', 'Edited metadata'
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    contract_id = db.Column(db.Integer, db.ForeignKey('contracts.id'), nullable=True)
+    details = db.Column(db.Text)  # optional: store extra details like filename, fields edited, etc.
+
+    user = db.relationship('User', backref='logs')
+    contract = db.relationship('Contract', backref='logs')

@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% block title %}Results - JN Records{% endblock %}
 {% block content %}
+
+<div style="position: fixed; top: 15px; left: 15px; z-index: 1000;">
+    <a href="{{ url_for('routes.dashboard') }}" style="text-decoration: none; background-color: #007BFF; color: white; padding: 8px 12px; border-radius: 5px; font-weight: bold;">
+      ← Return to Dashboard
+    </a>
+  </div>
+
 <h2>Search Results</h2>
 {% if results %}
     <ul>

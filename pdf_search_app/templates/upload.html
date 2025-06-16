@@ -1,9 +1,15 @@
 {% extends "base.html" %}
 {% block title %}Upload - JN Records{% endblock %}
 {% block content %}
-<h2>Upload PDF</h2>
-<div class="container">
-    <h2>Upload a Contract</h2>
+
+<div style="position: fixed; top: 15px; left: 15px; z-index: 1000;">
+    <a href="{{ url_for('routes.dashboard') }}" style="text-decoration: none; background-color: #007BFF; color: white; padding: 8px 12px; border-radius: 5px; font-weight: bold;">
+      ← Return to Dashboard
+    </a>
+  </div>
+
+<div class="container" style="padding-top: 70px;">
+<h2>Upload Contract</h2>
     <form method="POST" action="{{ url_for('routes.upload') }}" enctype="multipart/form-data">
         <input type="file" name="contract_file" accept=".pdf,.docx" required>
         <br><br>

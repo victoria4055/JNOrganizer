@@ -11,7 +11,22 @@ from pypdf import PdfReader
 import docx
 import re
 import csv
+import openai
 
+
+def generate_summary(text):
+    if not text.strip():
+        return ""
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "Summarize this contract for internal reference."},
+            {"role": "user", "content": text}
+        ],
+        temperature=0.3,
+        max_tokens=200,
+    )
+    return response['choices'][0]['message']['content'].strip()
 
 def extract_text_from_pdf(filepath):
     reader = PdfReader(filepath)
@@ -169,3 +184,6 @@ def process_folder(folder_path):
 
     db.session.commit()
     print("All mock contracts processed and added.")
+
+
+
