@@ -2,35 +2,58 @@
 
 {% block content %}
 <div style="position: fixed; top: 10px; left: 10px; z-index: 999;">
-    <a href="{{ url_for('routes.dashboard') }}" style="text-decoration: none; background-color: #007BFF; color: white; padding: 8px 12px; border-radius: 5px;">
-      ← Return to Dashboard
+    <a href="{{ url_for('routes.dashboard') }}"
+        style="top: 15px; left: 15px; z-index: 1000;
+          background-color: white;
+          border: 2px solid black;
+          border-radius: 50%;
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-decoration: none;
+          color: black;"
+    title="Return to Dashboard">
+    <i class="fas fa-house"></i>
     </a>
   </div>
 
-
-  <div class="container" style="margin-top: 60px;">
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col">
     <h2>Search Results for "{{ query }}"</h2>
     <p>{{ count }} result{{ '' if count == 1 else 's' }} found</p>
 
     {% if contracts %}
 
-    <form method="get" action="{{ url_for('routes.search') }}" style="margin-bottom: 15px;">
+    <form method="get" action="{{ url_for('routes.search') }}" class="row g-3 align-items-center mb-3">
         <input type="hidden" name="q" value="{{ query }}">
-        <label for="sort">Sort by:</label>
-        <select name="sort" id="sort">
+        
+        <div class="col-auto">
+          <label for="sort" class="col-form-label">Sort by:</label>
+        </div>
+        
+        <div class="col-auto">
+          <select name="sort" id="sort" class="form-select">
           <option value="relevance" {% if request.args.get('sort') == 'relevance' %}selected{% endif %}>Relevance</option>
           <option value="date_desc" {% if request.args.get('sort') == 'date_desc' %}selected{% endif %}>Date (Newest → Oldest)</option>
           <option value="date_asc" {% if request.args.get('sort') == 'date_asc' %}selected{% endif %}>Date (Oldest → Newest)</option>
           <option value="artist_asc" {% if request.args.get('sort') == 'artist_asc' %}selected{% endif %}>Artist (A–Z)</option>
           <option value="artist_desc" {% if request.args.get('sort') == 'artist_desc' %}selected{% endif %}>Artist (Z–A)</option>
         </select>
-        <button type="submit">Apply</button>
-      </form>
+    </div>
+  
+    <div class="col-auto">
+      <button type="submit" class="btn btn-dark">Apply</button>
+    </div>
+  </form>
 
-      <input type="text" id="filterInput" placeholder="Filter results..." style="margin-bottom: 10px; width: 300px;">
+      <input type="text" id="filterInput" class="form-control mb-3" placeholder="Filter results...">
       
-    <table border="1" cellpadding="10" cellspacing="0">
-        <thead>
+    <div class="table-responsive"> 
+      <table class="table table-bordered table-striped table-hover"> 
+        <thead class="table-dark">
             <tr>
                 <th>File Name</th>
                 <th>Artist</th>
@@ -54,12 +77,11 @@
                 <td>{{ contract.status or '—' }}</td>
                 <td>{{ contract.category or '—' }}</td>
                 <td>{{ contract.summary or '—' }}</td>
-                <td>
-                    <a href="{{ url_for('routes.open_contract', filename=contract.filename) }}" target="_blank">Open</a> |
-                </td>
-                <td>
-                  <a href="{{ url_for('routes.edit_contract', id=contract.id) }}">Edit</a>
-                </td>
+                <td class="d-flex flex-column gap-1">
+                    <a href="{{ url_for('routes.open_contract', filename=contract.filename) }}" target="_blank" class="btn btn-primary btn-sm">Open</a>
+                    <a href="{{ url_for('routes.edit_contract', id=contract.id) }}" class="btn btn-secondary btn-sm">Edit</a>
+                    <a href="{{ url_for('routes.contract_overview', contract_id=contract.id) }}" class="btn btn-info btn-sm">Overview</a>
+                  </td>
               </tr>
             {% endfor %}
         </tbody>
@@ -75,8 +97,11 @@
           </script>          
 
     </table>
+</div> 
     {% else %}
     <p>No contracts matched your search.</p>
     {% endif %}
-</div>
+    </div> <!-- end of .col -->
+    </div> <!-- end of .row -->
+</div> 
 {% endblock %}

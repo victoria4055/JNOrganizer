@@ -295,3 +295,23 @@ def open_contract(filename):
 @login_required
 def help():
     return render_template('help.html')
+
+@routes_blueprint.route('/overview/<int:contract_id>')
+@login_required
+def contract_overview(contract_id):
+    contract = Contract.query.get_or_404(contract_id)
+
+    # Use existing summary, or generate a longer one from content
+    from .extract import extract_metadata
+    full_path = os.path.join('pdf_search_app/static/MockContracts', contract.filename)
+    metadata = extract_metadata(full_path)
+    full_text = metadata.get('content', '')
+
+    # Generate long summary
+    long_summary = generate_summary(full_text)  # you can create a generate_long_summary function here
+
+    log = ActivityLog(user_id=current_user.id, action=f"Viewed overview for: {contract.filename}")
+    db.session.add(log)
+    db.session.commit()
+
+    return render_template('contract_overview.html', contract=contract, long_summary=long_summary)

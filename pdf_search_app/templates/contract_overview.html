@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Contract Overview - {{ contract.display_name }}{% endblock %}
+
+{% block content %}
+
+<div style="position: fixed; top: 10px; left: 10px; z-index: 999;">
+    <a href="{{ url_for('routes.dashboard') }}"
+        style="top: 15px; left: 15px; z-index: 1000;
+          background-color: white;
+          border: 2px solid black;
+          border-radius: 50%;
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-decoration: none;
+          color: black;"
+    title="Return to Dashboard">
+    <i class="fas fa-house"></i>
+    </a>
+  </div>
+
+<div class="container" style="margin-top: 60px;">
+    <a href="{{ url_for('routes.dashboard') }}" class="btn btn-primary mb-3">← Return to Dashboard</a>
+
+    <h2>Overview for {{ contract.display_name }}</h2>
+    <p><strong>Artist:</strong> {{ contract.artist_name }}</p>
+    <p><strong>Date:</strong> {{ contract.date }}</p>
+    <p><strong>Affiliation:</strong> {{ contract.affiliation }}</p>
+    <p><strong>Category:</strong> {{ contract.category }}</p>
+    <p><strong>Status:</strong> {{ contract.status }}</p>
+
+    <hr>
+
+    <h4> AI Overview </h4>
+    <p>{{ long_summary }}</p>
+
+    <hr>
+
+    <a href="{{ url_for('routes.open_contract', filename=contract.filename) }}" target="_blank" class="btn btn-secondary">Open Full Document</a>
+</div>
+{% endblock %}
