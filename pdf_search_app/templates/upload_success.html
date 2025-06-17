@@ -1,9 +1,32 @@
 {% extends "base.html" %}
+{% block title %}Upload Success{% endblock %}
 
 {% block content %}
-  <div class="success-message">
-    <h2>Upload successful!</h2>
-    <p>Your file <strong>{{ filename }}</strong> was uploaded.</p>
-    <a href="{{ url_for('routes.dashboard') }}" class="btn btn-primary">Return to Dashboard</a>
+<div class="container mt-5">
+  <h2>Upload successful!</h2>
+  <p>Your file <strong>{{ contract.filename }}</strong> was uploaded.</p>
+
+  <div class="card mt-4">
+    <div class="card-header bg-success text-white">
+      <strong>Uploaded Contract Details</strong>
+    </div>
+    <div class="card-body">
+      <table class="table table-bordered">
+        <tr><th>Artist Name</th><td>{{ contract.artist_name }}</td></tr>
+        <tr><th>Date</th><td>{{ contract.date }}</td></tr>
+        <tr><th>Keywords</th><td>{{ contract.keywords }}</td></tr>
+        <tr><th>Affiliation</th><td>{{ contract.affiliation }}</td></tr>
+        <tr><th>Completion</th><td>{{ contract.status }}</td></tr>
+        <tr><th>Category</th><td>{{ contract.category }}</td></tr>
+        <tr><th>Summary</th><td>{{ contract.summary or '—' }}</td></tr>
+      </table>
+
+      <div class="d-flex justify-content-start gap-3 mt-4">
+        <a href="{{ url_for('routes.edit_contract', id=contract.id) }}" class="btn btn-secondary">Edit Upload</a>
+        <a href="{{ url_for('routes.dashboard') }}" class="btn btn-primary">Return to Dashboard</a>
+      </div>
+    </div>
   </div>
+</div>
 {% endblock %}
+

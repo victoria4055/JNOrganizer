@@ -9,6 +9,9 @@ from werkzeug.utils import secure_filename
 from .extract import extract_metadata 
 from flask_login import login_required, current_user
 from pdf_search_app.models import ActivityLog
+from werkzeug.security import check_password_hash, generate_password_hash
+from flask import flash, render_template, redirect, url_for
+from .forms import ChangePasswordForm
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'static', 'MockContracts')
 
@@ -51,6 +54,7 @@ def search():
         Contract.date.ilike(f'%{query}%'),
         Contract.keywords.ilike(f'%{query}%'),
         Contract.affiliation.ilike(f'%{query}%')
+        
     )
 
     # Sorting logic
@@ -147,7 +151,7 @@ def upload():
         db.session.add(log)
         db.session.commit()
 
-        return render_template('upload_success.html', filename=filename)
+        return render_template('upload_success.html', contract=new_contract)
 
     return render_template('upload.html')
 
@@ -315,3 +319,19 @@ def contract_overview(contract_id):
     db.session.commit()
 
     return render_template('contract_overview.html', contract=contract, long_summary=long_summary)
+
+@routes_blueprint.route('/change_password', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    form = ChangePasswordForm()
+    if form.validate_on_submit():
+        if not check_password_hash(current_user.password, form.old_password.data):
+            flash("Incorrect current password.", "danger")
+        elif form.new_password.data != form.confirm_new_password.data:
+            flash("New passwords do not match.", "danger")
+        else:
+            current_user.password = generate_password_hash(form.new_password.data)
+            db.session.commit()
+            flash("Password changed successfully.", "success")
+            return redirect(url_for('user_home'))
+    return render_template('change_password.html', form=form)

@@ -215,3 +215,40 @@ footer {
 .upload-btn:hover {
     background-color: #333;
 }
+
+.card {
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #fff; /* or your desired background */
+}
+
+/* Vertical spacing for sidebar list items */
+.sidebar ul.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  
+  /* Ensure nested ul (under 'Database') has smaller gap */
+  .sidebar ul.sidebar-nav ul {
+    gap: 10px;
+    margin-left: 15px;
+  }
+  
+  .sidebar-logo {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .sidebar-logo img {
+    width: 100px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+  

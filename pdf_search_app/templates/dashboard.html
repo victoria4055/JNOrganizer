@@ -1,15 +1,16 @@
 {% extends "base.html" %}
 {% block title %}Dashboard - JN Records{% endblock %}
+
 {% block content %}
 <div class="dashboard-wrapper">
+
   <div class="sidebar">
-    <h2>JN Music Group</h2>
-    <ul>
-      <li><a href="{{ url_for('routes.dashboard') }}">Dashboard</a></li>
-      <li><a href="{{ url_for('routes.upload') }}">Upload PDF</a></li>
-  
+    <div class="sidebar-logo">
+      <img src="{{ url_for('static', filename='images/JN-icon.png') }}" alt="JN Logo">
+    </div>
+    <ul class="sidebar-nav">  
       <li><strong>Database</strong></li>
-      <ul style="margin-left: 15px;">
+      <ul>
         <li class="{% if not request.args.get('category') %}active{% endif %}">
           <a href="{{ url_for('routes.database') }}">All Documents</a>
         </li>
@@ -23,16 +24,15 @@
           <a href="{{ url_for('routes.database', category='Financial') }}">Financial Agreements</a>
         </li>
       </ul>
-  
+
+      <li><a href="{{ url_for('routes.upload') }}">Upload PDF</a></li>
       <li><a href="{{ url_for('routes.user_home') }}">User Home</a></li>
       <li><a href="{{ url_for('routes.help') }}">Help / FAQ</a></li>
     </ul>
   </div>
   
-  
-
-  
   <div class="main-content">
+
     <h2>Dashboard</h2>
 
     <div class="search-bar">

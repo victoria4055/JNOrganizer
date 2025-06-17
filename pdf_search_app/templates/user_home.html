@@ -20,36 +20,56 @@
     </a>
   </div>
 
-  <div class="container" style="margin-top: 60px;">
-    <h2>Welcome, {{ user.username }}</h2>
-    <p>Email: {{ user.email }}</p>
-    <p>Password: ********</p>
+  <div class="container mt-5">
+    <div class="card p-4 mb-4 shadow-sm">
+        <h3 class="mb-2">Welcome, {{ user.username }}</h3>
+        <p class="mb-1"><strong>Email:</strong> {{ user.email }}</p>
+        <p class="mb-0">
+            <strong>Password:</strong> ••••••••
+            <a href="{{ url_for('routes.change_password') }}" class="btn btn-sm btn-outline-secondary ms-3">Change Password</a>
+        </p>
+    </div>
 
-    <hr>
 
-    <div style="display: flex; gap: 50px;">
-        <div style="flex: 1;">
-            <h3>Recently Viewed Documents</h3>
-            <ul>
-                {% for log in viewed %}
-                    <li>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }} – {{ log.action }}</li>
-                {% else %}
-                    <li>No viewed documents yet.</li>
-                {% endfor %}
-            </ul>
+    <div class="row">
+        <!-- Recently Viewed -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <strong>Recently Viewed Documents</strong>
+                </div>
+                <div class="card-body overflow-auto" style="max-height: 300px;">
+                    <ul class="list-unstyled">
+                        {% for log in viewed %}
+                            <li>• {{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }} – {{ log.action }}</li>
+                        {% else %}
+                            <li>No viewed documents yet.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
         </div>
 
-        <div style="flex: 1;">
-            <h3>Documents You Uploaded or Edited</h3>
-            <ul>
-                {% for log in uploads_edits %}
-                    <li>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }} – {{ log.action }}</li>
-                {% else %}
-                    <li>No uploads or edits yet.</li>
-                {% endfor %}
-            </ul>
+        <!-- Uploaded or Edited -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <strong>Documents You Uploaded or Edited</strong>
+                </div>
+                <div class="card-body overflow-auto" style="max-height: 300px;">
+                    <ul class="list-unstyled">
+                        {% for log in uploads_edits %}
+                            <li>• {{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }} – {{ log.action }}</li>
+                        {% else %}
+                            <li>No uploads or edits yet.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
+
+
 </div>
 {% endblock %}
 
