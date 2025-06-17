@@ -53,7 +53,9 @@ def search():
         Contract.artist_name.ilike(f'%{query}%'),
         Contract.date.ilike(f'%{query}%'),
         Contract.keywords.ilike(f'%{query}%'),
-        Contract.affiliation.ilike(f'%{query}%')
+        Contract.affiliation.ilike(f'%{query}%'),
+        Contract.filename.ilike(f'%{query}%') 
+
         
     )
 
