@@ -210,7 +210,9 @@ def register():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
+        user = User.query.filter(
+            (User.username == form.username.data) | (User.email == form.username.data)
+        ).first()
         if user:
             # Allow if email ends in @jnrecords.com or it's your specific email
             if user.email.endswith('@jnrecords.com') or user.email == "victoria.v1@icloud.com":
@@ -308,14 +310,14 @@ def help():
 def contract_overview(contract_id):
     contract = Contract.query.get_or_404(contract_id)
 
-    # Use existing summary, or generate a longer one from content
+    # use existing summary, or generate a longer one from content
     from .extract import extract_metadata
     full_path = os.path.join('pdf_search_app/static/MockContracts', contract.filename)
     metadata = extract_metadata(full_path)
     full_text = metadata.get('content', '')
 
-    # Generate long summary
-    long_summary = generate_summary(full_text)  # you can create a generate_long_summary function here
+    # generates long summary
+    long_summary = generate_summary(full_text)  # generate_long_summary function here
 
     log = ActivityLog(user_id=current_user.id, action=f"Viewed overview for: {contract.filename}")
     db.session.add(log)

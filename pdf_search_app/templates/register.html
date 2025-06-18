@@ -1,49 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Register - JNOrganizer</title>
-</head>
-<body>
-    <h2>Register</h2>
-    <form method="POST" action="{{ url_for('routes.register') }}">
-        {{ form.hidden_tag() }}
+{% extends "base.html" %}
+{% block title %}Register - JN Records{% endblock %}
+{% block content %}
 
-        <div>
-            {{ form.username.label }}<br>
-            {{ form.username(size=32) }}
-        </div>
+<div class="login-container">
 
-        <div>
-            {{ form.email.label }}<br>
-            {{ form.email(size=32) }}
-        </div>
-
-        <div>
-            {{ form.password.label }}<br>
-            {{ form.password(size=32) }}
-        </div>
-
-        <div>
-            {{ form.confirm.label }}<br>
-            {{ form.confirm(size=32) }}
-        </div>
-
-        <div>
-            {{ form.submit() }}
-        </div>
-    </form>
-
-    <p>Already have an account? <a href="{{ url_for('routes.login') }}">Log in here</a></p>
+    <img src="{{ url_for('static', filename='images/LOGO-JN-MUSIC-GROUP.png') }}" alt="JN Music Group Logo" class="login-logo">
 
     {% with messages = get_flashed_messages() %}
         {% if messages %}
-            <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-            </ul>
+            <div class="alert alert-warning mt-2">
+                {% for message in messages %}
+                    <div>{{ message }}</div>
+                {% endfor %}
+            </div>
         {% endif %}
     {% endwith %}
-</body>
-</html>
+
+    <form method="POST" action="{{ url_for('routes.register') }}" class="text-start">
+        {{ form.hidden_tag() }}
+
+        <div class="form-group mb-3">
+            {{ form.username.label(class_="form-label") }}
+            {{ form.username(class_="form-control") }}
+        </div>
+
+        <div class="form-group mb-3">
+            {{ form.email.label(class_="form-label") }}
+            {{ form.email(class_="form-control") }}
+        </div>
+
+        <div class="form-group mb-3">
+            {{ form.password.label(class_="form-label") }}
+            {{ form.password(class_="form-control") }}
+        </div>
+
+        <div class="form-group mb-4">
+            {{ form.confirm.label(class_="form-label") }}
+            {{ form.confirm(class_="form-control") }}
+        </div>
+
+        <div class="d-grid">
+            {{ form.submit(class_="btn btn-primary") }}
+        </div>
+    </form>
+
+    <p class="register-text mt-3">Already have an account? <a href="{{ url_for('routes.login') }}">Log in here</a></p>
+</div>
+
+{% endblock %}

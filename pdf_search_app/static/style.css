@@ -288,3 +288,23 @@ body {
     height: 42px;
     font-size: 16px;
 }
+
+.upload-box {
+    border: 2px dashed #bbb;
+    border-radius: 10px;
+    padding: 40px;
+    width: 100%;
+    max-width: 500px;
+    background-color: #fefefe;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.3s;
+}
+
+.upload-box:hover {
+    background-color: #f9f9f9;
+}
+
+.upload-box p {
+    margin: 0;
+    font-size: 16px;
+}
