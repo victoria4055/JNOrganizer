@@ -252,3 +252,7 @@ body {
     margin: 0 auto;
   }
   
+  .table th, .table td {
+    vertical-align: middle;
+    font-size: 14px;
+  }
