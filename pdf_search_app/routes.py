@@ -342,21 +342,12 @@ def change_password():
 @routes_blueprint.route('/delete/<int:contract_id>', methods=['POST'])
 @login_required
 def delete_contract(contract_id):
-    contract = Contract.query.get_or_404(contract_id)
-
     try:
+        contract = Contract.query.get_or_404(contract_id)
         db.session.delete(contract)
         db.session.commit()
-
-        if current_user.is_authenticated:
-            log = ActivityLog(user_id=current_user.id, action=f"Deleted contract: {contract.file_name}")
-            db.session.add(log)
-            db.session.commit()
-
-        flash(f"Contract '{contract.file_name}' has been deleted.", "success")
+        flash('Contract successfully deleted.', 'success')
     except Exception as e:
-        db.session.rollback()
-        flash("Error deleting contract.", "danger")
-
+        print("DELETE ERROR:", e)  # Add this to debug
+        flash('Error deleting contract.', 'danger')
     return redirect(url_for('routes.dashboard'))
-
