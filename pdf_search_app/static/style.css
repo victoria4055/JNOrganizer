@@ -256,3 +256,35 @@ body {
     vertical-align: middle;
     font-size: 14px;
   }
+
+  .login-container {
+    max-width: 400px;
+    margin: 80px auto;
+    padding: 40px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-form {
+    width: 100%;
+}
+
+.login-logo {
+    max-width: 400px;
+    margin-bottom: 5px;
+}
+
+.login-container input.form-control {
+    width: 100%;
+    height: 42px;
+    font-size: 16px;
+}
+
+.login-container .btn-primary {
+    height: 42px;
+    font-size: 16px;
+}
