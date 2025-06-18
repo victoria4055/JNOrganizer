@@ -24,8 +24,8 @@
   <h2 class="mb-4">Edit Contract Metadata</h2>
 
   <form method="POST" class="row g-3">
-    <div class="col-12">
-      <label class="form-label"><strong>File Name:</strong> {{ contract.filename }}</label>
+    <div class="col-md-6">
+        <label class="form-label"><strong>File Name:</strong> {{ contract.filename }}</label>
     </div>
 
     <div class="col-md-6">
@@ -38,13 +38,13 @@
       <input type="text" name="date" class="form-control" value="{{ contract.date }}">
     </div>
 
-    <div class="col-12">
-      <label class="form-label">Keywords:</label>
+    <div class="col-md-6">
+        <label class="form-label">Keywords:</label>
       <input type="text" name="keywords" class="form-control" value="{{ contract.keywords }}">
     </div>
 
-    <div class="col-12">
-      <label class="form-label">Affiliation:</label>
+    <div class="col-md-6">
+        <label class="form-label">Affiliation:</label>
       <input type="text" name="affiliation" class="form-control" value="{{ contract.affiliation }}">
     </div>
 
@@ -65,7 +65,33 @@
 
     <div class="col-12 mt-3">
       <button type="submit" class="btn btn-success">Save Changes</button>
+    
+      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+        Delete Contract
+      </button>
+
     </div>
   </form>
+
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form method="POST" action="{{ url_for('routes.delete_contract', contract_id=contract.id) }}">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to permanently delete <strong>{{ contract.file_name }}</strong>? This action cannot be undone.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Cancel</button>
+            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
 </div>
 {% endblock %}

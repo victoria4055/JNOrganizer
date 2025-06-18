@@ -72,6 +72,7 @@ def search():
         contracts = Contract.query.filter(filters).all()
 
     for c in contracts:
+
         c.display_name = os.path.basename(c.filename)
 
     if current_user.is_authenticated:
@@ -337,3 +338,25 @@ def change_password():
             flash("Password changed successfully.", "success")
             return redirect(url_for('user_home'))
     return render_template('change_password.html', form=form)
+
+@routes_blueprint.route('/delete/<int:contract_id>', methods=['POST'])
+@login_required
+def delete_contract(contract_id):
+    contract = Contract.query.get_or_404(contract_id)
+
+    try:
+        db.session.delete(contract)
+        db.session.commit()
+
+        if current_user.is_authenticated:
+            log = ActivityLog(user_id=current_user.id, action=f"Deleted contract: {contract.file_name}")
+            db.session.add(log)
+            db.session.commit()
+
+        flash(f"Contract '{contract.file_name}' has been deleted.", "success")
+    except Exception as e:
+        db.session.rollback()
+        flash("Error deleting contract.", "danger")
+
+    return redirect(url_for('routes.dashboard'))
+
