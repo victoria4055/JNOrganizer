@@ -23,53 +23,58 @@
 
   <h2 class="mb-4">Edit Contract Metadata</h2>
 
-  <form method="POST" class="row g-3">
-    <div class="col-md-6">
+  <form method="POST">
+    <div class="row mb-3">
+      <div class="col-md-6">
         <label class="form-label"><strong>File Name:</strong> {{ contract.filename }}</label>
+      </div>
     </div>
-
-    <div class="col-md-6">
-      <label class="form-label">Artist Name:</label>
-      <input type="text" name="artist_name" class="form-control" value="{{ contract.artist_name }}">
+  
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Date:</label>
+        <input type="text" name="date" class="form-control" value="{{ contract.date }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Artist Name:</label>
+        <input type="text" name="artist_name" class="form-control" value="{{ contract.artist_name }}">
+      </div>
     </div>
-
-    <div class="col-md-6">
-      <label class="form-label">Date:</label>
-      <input type="text" name="date" class="form-control" value="{{ contract.date }}">
-    </div>
-
-    <div class="col-md-6">
-        <label class="form-label">Keywords:</label>
-      <input type="text" name="keywords" class="form-control" value="{{ contract.keywords }}">
-    </div>
-
-    <div class="col-md-6">
+  
+    <div class="row mb-3">
+      <div class="col-md-6">
         <label class="form-label">Affiliation:</label>
-      <input type="text" name="affiliation" class="form-control" value="{{ contract.affiliation }}">
+        <input type="text" name="affiliation" class="form-control" value="{{ contract.affiliation }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Keywords:</label>
+        <input type="text" name="keywords" class="form-control" value="{{ contract.keywords }}">
+      </div>
     </div>
-
-    <div class="col-md-6">
-      <label class="form-label">Completion:</label>
-      <select name="completion" class="form-select">
-        <option value="FE" {% if contract.status == 'FE' %}selected{% endif %}>Fully Executed (FE)</option>
-        <option value="PE" {% if contract.status == 'PE' %}selected{% endif %}>Partially Executed (PE)</option>
-        <option value="Draft" {% if contract.status == 'Draft' %}selected{% endif %}>Draft</option>
-        <option value="Unknown" {% if contract.status == 'Unknown' %}selected{% endif %}>Unknown</option>
-      </select>
+  
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Completion:</label>
+        <select name="completion" class="form-select">
+          <option value="FE" {% if contract.status == 'FE' %}selected{% endif %}>Fully Executed (FE)</option>
+          <option value="PE" {% if contract.status == 'PE' %}selected{% endif %}>Partially Executed (PE)</option>
+          <option value="Draft" {% if contract.status == 'Draft' %}selected{% endif %}>Draft</option>
+          <option value="Unknown" {% if contract.status == 'Unknown' %}selected{% endif %}>Unknown</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Category:</label>
+        <input type="text" name="category" class="form-control" value="{{ contract.category }}">
+      </div>
     </div>
-
-    <div class="col-md-6">
-      <label class="form-label">Category:</label>
-      <input type="text" name="category" class="form-control" value="{{ contract.category }}">
-    </div>
-
-    <div class="col-12 mt-3">
-      <button type="submit" class="btn btn-success">Save Changes</button>
-    
-      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
-        Delete Contract
-      </button>
-
+  
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <button type="submit" class="btn btn-success">Save Changes</button>
+        <button type="button" class="btn btn-danger ms-2" data-bs-toggle="modal" data-bs-target="#deleteModal">
+          Delete Contract
+        </button>
+      </div>
     </div>
   </form>
 
