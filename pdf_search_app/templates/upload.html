@@ -33,7 +33,6 @@
     <div id="fileNameDisplay" class="mt-3 text-muted" style="font-size: 14px;"></div>
 
     
-      <!-- Hidden Form -->
       <form method="POST" action="{{ url_for('routes.upload') }}" enctype="multipart/form-data" class="mt-3">
         <input type="file" name="contract_file" accept=".pdf,.docx" id="fileInput" hidden required>
         <button type="submit" class="btn btn-primary">Upload</button>
@@ -46,7 +45,6 @@
         const fileInput = document.getElementById('fileInput');
         const fileNameDisplay = document.getElementById('fileNameDisplay');
         
-        // Prevent default browser behavior
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(event => {
             window.addEventListener(event, e => {
                 e.preventDefault();
@@ -54,7 +52,6 @@
             });
         });
         
-        // Visual drag feedback
         dropzone.addEventListener('dragover', () => {
             dropzone.style.backgroundColor = '#f0f0f0';
         });
@@ -63,7 +60,6 @@
             dropzone.style.backgroundColor = '#fafafa';
         });
         
-        // Handle dropped files
         dropzone.addEventListener('drop', (e) => {
             dropzone.style.backgroundColor = '#fafafa';
             
@@ -73,12 +69,10 @@
                 dataTransfer.items.add(files[0]);
                 fileInput.files = dataTransfer.files;
         
-                // show file name
                 fileNameDisplay.innerText = `Selected file: ${files[0].name}`;
             }
         });
         
-        // Also handle clicks on "Browse Files"
         fileInput.addEventListener('change', () => {
             if (fileInput.files.length > 0) {
                 fileNameDisplay.innerText = `Selected file: ${fileInput.files[0].name}`;

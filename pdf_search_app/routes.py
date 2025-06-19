@@ -44,7 +44,7 @@ def search():
         return redirect(url_for('routes.search', q=query))
 
     query = request.args.get('q', '').strip()
-    sort_option = request.args.get('sort', 'relevance')  # default sort
+    sort_option = request.args.get('sort', 'relevance') 
 
     if not query:
         return render_template('search_results.html', contracts=[], query=query, count=0)
@@ -163,7 +163,6 @@ def edit_contract(id):
     contract = Contract.query.get_or_404(id)
 
     if request.method == 'POST':
-        # Update only the editable fields
         contract.artist_name = request.form.get('artist_name')
         contract.date = request.form.get('date')
         contract.keywords = request.form.get('keywords')
@@ -350,6 +349,6 @@ def delete_contract(contract_id):
         db.session.commit()
         flash('Contract successfully deleted.', 'success')
     except Exception as e:
-        print("DELETE ERROR:", e)  # Add this to debug
+        print("DELETE ERROR:", e) 
         flash('Error deleting contract.', 'danger')
     return redirect(url_for('routes.dashboard'))

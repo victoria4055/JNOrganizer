@@ -13,7 +13,6 @@ migrate = Migrate()
 def create_app():
     app = Flask(__name__)
     
-    # Build absolute path to contracts.db (now one level above this file)
     base_dir = os.path.abspath(os.path.dirname(__file__))
     db_path = os.path.join(base_dir, '..', 'contracts.db')
 
@@ -24,7 +23,7 @@ def create_app():
 
     # Initialize db with app
     db.init_app(app)
-    migrate.init_app(app, db)  # ✅ Enables Flask-Migrate
+    migrate.init_app(app, db) 
 
 
     # Import and register routes

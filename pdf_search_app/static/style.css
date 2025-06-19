@@ -101,8 +101,6 @@ footer {
 }
 
 
-/* dashboard layout */
-
 .dashboard-wrapper {
     display: flex;
     min-height: 100vh;
@@ -138,7 +136,7 @@ footer {
 
 .sidebar ul li.active a {
     font-weight: bold;
-    color: #f1c40f; /* Highlight color */
+    color: #f1c40f; 
   }  
 
 .sidebar a {
@@ -169,8 +167,6 @@ footer {
     font-size: 32px;
     margin-bottom: 30px;
 }
-
-/* searchbar section */
 
 .search-bar form {
     display: flex;
@@ -223,17 +219,15 @@ footer {
 body {
     margin: 0;
     padding: 0;
-    background-color: #fff; /* or your desired background */
+    background-color: #fff; 
 }
 
-/* Vertical spacing for sidebar list items */
 .sidebar ul.sidebar-nav {
     display: flex;
     flex-direction: column;
     gap: 18px;
   }
   
-  /* Ensure nested ul (under 'Database') has smaller gap */
   .sidebar ul.sidebar-nav ul {
     gap: 10px;
     margin-left: 15px;

@@ -39,11 +39,10 @@ class User(UserMixin, db.Model):
 class ActivityLog(db.Model):
     __tablename__ = 'activity_log'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))  # assuming you have a User model
-    action = db.Column(db.String(255), nullable=False)         # e.g. 'Uploaded PDF', 'Edited metadata'
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id')) 
+    action = db.Column(db.String(255), nullable=False)        
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     contract_id = db.Column(db.Integer, db.ForeignKey('contracts.id'), nullable=True)
-    details = db.Column(db.Text)  # optional: store extra details like filename, fields edited, etc.
-
+    details = db.Column(db.Text)  # optional: store extra details like filename, fields edited
     user = db.relationship('User', backref='logs')
     contract = db.relationship('Contract', backref='logs')
